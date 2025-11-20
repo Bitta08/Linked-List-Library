@@ -2,7 +2,7 @@
 
 # LLL - Linked List Library
 
-**Version:** 0.1  
+**Version:** 0.2  
 **License:** [GNU GPLv3](https://www.gnu.org/licenses/)  
 
 `LLL` è una libreria in C per la gestione di liste collegate semplici (*singly linked list*), con funzioni di debug multipiattaforma (Windows, Linux, macOS).  
