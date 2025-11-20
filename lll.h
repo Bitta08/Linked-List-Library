@@ -305,7 +305,7 @@ node_ptr addNodeMiddle(node_ptr head, int number_id)
 }
 
 
-node_ptr addNodoInPosition(node_ptr head, int number_id, int position)
+node_ptr addNodeInPosition(node_ptr head, int number_id, int position)
 {
     node_ptr new_node=(node_ptr) malloc(sizeof(node));
     
@@ -492,6 +492,188 @@ void printList(node_ptr head)
 }
 
 
+
+
+
+/*
+ * Funzione: lengthList
+ * ---------------------------------------
+ * Restituisce il numero di nodi in una lista collegata semplice.
+ *
+ * Parametri:
+ *  - head : puntatore al primo nodo della lista (può essere NULL).
+ *
+ * Ritorno:
+ *  - Numero intero dei nodi presenti nella lista.
+ *
+ * Comportamento:
+ *  - Se la lista è vuota, ritorna 0.
+ */
+int lengthList(node_ptr head)
+{
+    node_ptr current = head;
+    int i = 0;
+
+    while (current != NULL)
+    {
+        i++;
+        current = current->next;
+    }
+
+    return i;
+}
+
+
+/*
+ * Funzione: freeList
+ * ---------------------------------------
+ * Libera tutta la memoria occupata dai nodi di una lista collegata semplice.
+ *
+ * Parametri:
+ *  - head : puntatore al primo nodo della lista (può essere NULL).
+ *
+ * Comportamento:
+ *  - Itera su tutti i nodi della lista, liberando ciascuno.
+ *  - Alla fine, tutta la memoria della lista è deallocata.
+ */
+void freeList(node_ptr head)
+{
+    node_ptr current = head;
+    node_ptr next_node;
+
+    while (current)
+    {
+        next_node = current->next;
+        free(current);
+        current = next_node;
+    }
+}
+
+
+
+
+/*
+ * Funzione: freeNodeTail
+ * ---------------------------------------
+ * Libera l'ultimo nodo della lista collegata semplice.
+ *
+ * Parametri:
+ *  - head : puntatore al primo nodo della lista.
+ *
+ * Ritorno:
+ *  - Nuova testa della lista.
+ */
+node_ptr freeNodeTail(node_ptr head)
+{
+    if (!head) return NULL; // lista vuota
+
+    if (!head->next) // solo un nodo
+    {
+        free(head);
+        return NULL;
+    }
+
+    node_ptr current = head;
+    while (current->next->next) // scorre fino al penultimo nodo
+    {
+        current = current->next;
+    }
+
+    free(current->next);
+    current->next = NULL;
+    return head;
+}
+
+/*
+ * Funzione: freeNodeHead
+ * ---------------------------------------
+ * Libera il primo nodo della lista collegata semplice.
+ *
+ * Parametri:
+ *  - head : puntatore al primo nodo della lista.
+ *
+ * Ritorno:
+ *  - Nuova testa della lista.
+ */
+node_ptr freeNodeHead(node_ptr head)
+{
+    if (!head) return NULL;
+
+    node_ptr new_head = head->next;
+    free(head);
+    return new_head;
+}
+
+/*
+ * Funzione: freeNodeMiddle
+ * ---------------------------------------
+ * Libera il nodo in posizione centrale della lista.
+ *
+ * Parametri:
+ *  - head : puntatore al primo nodo della lista.
+ *
+ * Ritorno:
+ *  - Nuova testa della lista.
+ *
+ * Nota:
+ *  - La posizione centrale è calcolata come floor(length/2)
+ */
+node_ptr freeNodeMiddle(node_ptr head)
+{
+    if (!head) return NULL;
+
+    int len = lengthList(head);
+    int mid = len / 2;
+
+    if (mid == 0) // lista di un solo nodo
+        return freeNodeHead(head);
+
+    node_ptr current = head;
+    for (int i = 0; i < mid - 1; i++)
+        current = current->next;
+
+    node_ptr to_free = current->next;
+    if (to_free)
+    {
+        current->next = to_free->next;
+        free(to_free);
+    }
+
+    return head;
+}
+
+/*
+ * Funzione: freeNodeInPosition
+ * ---------------------------------------
+ * Libera il nodo in una posizione specifica (indice 0-based).
+ *
+ * Parametri:
+ *  - head     : puntatore al primo nodo della lista.
+ *  - position : posizione del nodo da liberare.
+ *
+ * Ritorno:
+ *  - Nuova testa della lista.
+ */
+node_ptr freeNodeInPosition(node_ptr head, int position)
+{
+    if (!head || position < 0) return head;
+
+    if (position == 0)
+        return freeNodeHead(head);
+
+    node_ptr current = head;
+    for (int i = 0; i < position - 1 && current->next; i++)
+        current = current->next;
+
+    node_ptr to_free = current->next;
+    if (to_free)
+    {
+        current->next = to_free->next;
+        free(to_free);
+    }
+
+    return head;
+}
 
 
 #endif // __LINKED_LIST_LIBRARY_H
